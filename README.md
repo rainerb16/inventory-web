@@ -97,9 +97,9 @@ npm run dev
 
 ## Todo / Next Steps
 
-- Add items UI (list, create, update, delete)
-- Persist user session across tabs and refresh (already supported by backend)
-- Add loading and empty states for item data
+X DONE – Add items UI (list, create, update, delete)
+X DONE – Persist user session across tabs and refresh
+X DONE – Add loading and empty states for item data
 - Improve form validation and user feedback
 - Extract UI into reusable components
 - Add basic routing (auth vs dashboard views)

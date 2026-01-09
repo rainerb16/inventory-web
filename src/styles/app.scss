@@ -74,3 +74,89 @@ h2 {
   display: grid;
   gap: 16px;
 }
+
+/* ---------------- Items ---------------- */
+
+.items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 12px 0;
+}
+
+.item-view,
+.item-edit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.item-qty {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* ---------------- Forms ---------------- */
+
+.input {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.input--small {
+  width: 80px;
+}
+
+/* ---------------- Buttons ---------------- */
+
+.button {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  background: #cbcbcb;
+  color: #000;
+  cursor: pointer;
+  font-size: 0.9rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.button--secondary {
+  background: #cbcbcb;
+}
+
+.button--link {
+  background: none;
+  color: #000000;
+  padding: 0;
+  text-decoration: underline;
+}
+
+
+.item-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+
+  .button--danger {
+    background: #c0392b;
+    color: #ffffff;
+  }
+}
+
