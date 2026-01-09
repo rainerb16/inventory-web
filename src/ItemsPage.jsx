@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { api } from "./api";
+import ItemRow from "./components/ItemRow";
+import ItemForm from "./components/ItemForm";
+
 
 export default function ItemsPage({ user, onLogout }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
-
+  const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editQty, setEditQty] = useState(0);
   const [savingId, setSavingId] = useState(null);
-
   const [deletingId, setDeletingId] = useState(null);
-
   const [error, setError] = useState("");
 
   async function loadItems() {
@@ -47,18 +47,32 @@ export default function ItemsPage({ user, onLogout }) {
   async function addItem(e) {
     e.preventDefault();
     setError("");
+
+    const trimmed = String(name).trim();
+    const qtyNum = Number(quantity);
+
+    setAdding(true);
     try {
       await api("/items", {
         method: "POST",
-        body: JSON.stringify({ name, quantity: Number(quantity) }),
+        body: JSON.stringify({ name: trimmed, quantity: qtyNum }),
       });
+
       setName("");
       setQuantity(0);
+
+      // Option A: refetch (simple)
       await loadItems();
+
+      // Option B (later): optimistic add
     } catch (e) {
       setError(e.message);
+    } finally {
+      setAdding(false);
     }
   }
+
+  const canAdd = String(name).trim().length > 0 && Number(quantity) >= 0;
 
   function startEdit(item) {
     setEditingId(item.id);
@@ -126,17 +140,15 @@ export default function ItemsPage({ user, onLogout }) {
 
       <div className="card">
         <h2>Add Item</h2>
-        <form onSubmit={addItem}>
-          <label>
-            Name
-            <input value={name} onChange={(e) => setName(e.target.value)} />
-          </label>
-          <label>
-            Quantity
-            <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-          </label>
-          <button type="submit">Add</button>
-        </form>
+        <ItemForm
+          name={name}
+          quantity={quantity}
+          onChangeName={setName}
+          onChangeQty={setQuantity}
+          onSubmit={addItem}
+          disabled={adding || !canAdd}
+          buttonText={adding ? "Adding…" : "Add"}
+        />
       </div>
 
       <div className="card">
@@ -146,64 +158,24 @@ export default function ItemsPage({ user, onLogout }) {
         ) : items.length === 0 ? (
           <p>No items yet.</p>
         ) : (
-          <ul className="items">
-            {items.map((it) => (
-              <li key={it.id} className="item">
-                {editingId === it.id ? (
-                  <div className="item-edit">
-                    <input
-                      className="input"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                    />
-
-                    <input
-                      className="input input--small"
-                      type="number"
-                      value={editQty}
-                      onChange={(e) => setEditQty(e.target.value)}
-                    />
-
-                    <div className="item-actions">
-                      <button
-                        className="button"
-                        onClick={() => saveEdit(it.id)}
-                        disabled={savingId === it.id}
-                      >
-                        {savingId === it.id ? "Saving…" : "Save"}
-                      </button>
-
-                      <button className="button button--secondary" onClick={cancelEdit}>
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="item-view">
-                    <div className="item-info">
-                      <strong>{it.name}</strong>
-                      <span className="item-qty">qty {it.quantity}</span>
-                    </div>
-
-                    <div className="item-actions">
-                      <button
-                        className="button button--link"
-                        onClick={() => startEdit(it)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="button button--danger"
-                        onClick={() => deleteItem(it.id)}
-                        disabled={deletingId === it.id}
-                      >
-                        {deletingId === it.id ? "Deleting…" : "Delete"}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </li>
-            ))}
+            <ul className="items">
+              {items.map((it) => (
+                <ItemRow
+                  key={it.id}
+                  item={it}
+                  isEditing={editingId === it.id}
+                  editName={editName}
+                  editQty={editQty}
+                  onChangeName={setEditName}
+                  onChangeQty={setEditQty}
+                  onStartEdit={startEdit}
+                  onCancelEdit={cancelEdit}
+                  onSave={saveEdit}
+                  onDelete={deleteItem}
+                  isSaving={savingId === it.id}
+                  isDeleting={deletingId === it.id}
+                />
+              ))}
           </ul>
         )}
       </div>

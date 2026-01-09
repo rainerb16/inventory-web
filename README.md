@@ -100,8 +100,8 @@ npm run dev
 X DONE – Add items UI (list, create, update, delete)
 X DONE – Persist user session across tabs and refresh
 X DONE – Add loading and empty states for item data
+X DONE - Extract UI into reusable components
 - Improve form validation and user feedback
-- Extract UI into reusable components
 - Add basic routing (auth vs dashboard views)
 - Improve accessibility and keyboard navigation
 - Prepare production build and environment configuration
