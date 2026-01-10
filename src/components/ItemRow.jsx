@@ -23,6 +23,7 @@ export default function ItemRow({
             value={editName}
             onChange={(e) => onChangeName(e.target.value)}
             placeholder="Item name"
+            disabled={isSaving || !canSave}
           />
 
           <input
@@ -31,6 +32,7 @@ export default function ItemRow({
             value={editQty}
             onChange={(e) => onChangeQty(e.target.value)}
             min="0"
+            disabled={isSaving || !canSave}
           />
 
           <div className="item-actions">
@@ -46,7 +48,7 @@ export default function ItemRow({
             <button
               className="button button--secondary"
               onClick={onCancelEdit}
-              disabled={isSaving || !canSave}
+              disabled={isSaving}
             >
               Cancel
             </button>

@@ -17,6 +17,9 @@ export default function ItemsPage({ user, onLogout }) {
   const [savingId, setSavingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState("");
+  const [addError, setAddError] = useState("");
+  const [editError, setEditError] = useState("");
+
 
   const navigate = useNavigate();
 
@@ -51,9 +54,15 @@ export default function ItemsPage({ user, onLogout }) {
   async function addItem(e) {
     e.preventDefault();
     setError("");
+    setAddError("");
 
     const trimmed = String(name).trim();
     const qtyNum = Number(quantity);
+
+    if (!trimmed) return setAddError("Name is required");
+    if (!Number.isInteger(qtyNum) || qtyNum <= 0) {
+      return setAddError("Quantity must be a 0 or more.");
+    }
 
     setAdding(true);
     try {
@@ -62,6 +71,7 @@ export default function ItemsPage({ user, onLogout }) {
         body: JSON.stringify({ name: trimmed, quantity: qtyNum }),
       });
 
+      setError("");
       setName("");
       setQuantity(0);
 
@@ -90,19 +100,30 @@ export default function ItemsPage({ user, onLogout }) {
 
   async function saveEdit(id) {
     setError("");
+    setEditError("");
+
+    const trimmed = String(editName).trim();
+    const qtyNum = Number(editQty);
+
+    if (!trimmed) return setEditError("Name is required");
+    if (!Number.isInteger(qtyNum) || qtyNum <= 0) {
+      return setEditError("Quantity must be a 0 or more.");
+    }
+
     setSavingId(id);
     try {
       const data = await api(`/items/${id}`, {
         method: "PATCH",
         body: JSON.stringify({
-          name: editName,
-          quantity: Number(editQty),
+          name: trimmed,
+          quantity: qtyNum,
         }),
       });
 
       // Update local state without refetch
       setItems((prev) => prev.map((it) => (it.id === id ? data.item : it)));
 
+      setEditError("");
       cancelEdit();
     } catch (e) {
       setError(e.message);
@@ -159,13 +180,19 @@ export default function ItemsPage({ user, onLogout }) {
           onChangeName={setName}
           onChangeQty={setQuantity}
           onSubmit={addItem}
-          disabled={adding || !canAdd}
+          disabled={adding}
+          canSubmit={canAdd}
           buttonText={adding ? "Adding…" : "Add"}
         />
+
+        {addError && <div className="error">{addError}</div>}
       </div>
 
       <div className="card">
         <h2>Items</h2>
+
+        {editError && <div className="error">{editError}</div>}
+
         {loading ? (
           <p>Loading…</p>
         ) : items.length === 0 ? (

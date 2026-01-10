@@ -7,8 +7,7 @@ export default function ItemForm({
   onSubmit,
   disabled = false,
   buttonText = "Add",
-  adding = false,
-  canAdd = true,
+  canSubmit = true,
 }) {
   return (
     <form className="form" onSubmit={onSubmit}>
@@ -19,6 +18,7 @@ export default function ItemForm({
           value={name}
           onChange={(e) => onChangeName(e.target.value)}
           placeholder="e.g. Headphones"
+          disabled={disabled}
         />
       </label>
 
@@ -34,7 +34,7 @@ export default function ItemForm({
         />
       </label>
 
-      <button className="button" type="submit" disabled={adding || !canAdd}>
+      <button className="button" type="submit" disabled={disabled || !canSubmit}>
         {buttonText}
       </button>
     </form>
