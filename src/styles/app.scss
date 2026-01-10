@@ -1,5 +1,5 @@
 // variables
-$bg: #f8f9fb;
+$bg: #e3e3e3;
 $card: #ffffff;
 $border: #e1e3e8;
 $text: #222;
@@ -11,7 +11,7 @@ $danger: #c0392b;
 }
 
 .app {
-  max-width: 768px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -134,10 +134,11 @@ h2 {
   padding: 6px 10px;
   border-radius: 4px;
   border: none;
-  background: #cbcbcb;
-  color: #000;
+  background: #000000;
+  color: #fff;
   cursor: pointer;
   font-size: 0.9rem;
+  font-weight: 650;
 
   &:disabled {
     opacity: 0.6;

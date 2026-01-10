@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { api } from "./api";
 
 export default function AuthPage({ onAuthed }) {
-  const [email, setEmail] = useState("you@test.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
@@ -65,11 +67,11 @@ export default function AuthPage({ onAuthed }) {
             <h2>Signup</h2>
             <label>
               Email
-              <input value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} />
             </label>
             <label>
               Password (8+ chars)
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <input type="password" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} />
             </label>
             <button type="submit">Create account</button>
           </form>
