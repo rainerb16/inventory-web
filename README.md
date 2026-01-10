@@ -5,6 +5,8 @@ The app relies on **HttpOnly cookies** and a `/me` endpoint to determine authent
 
 This project is intentionally simple and focused on **correct auth flow and frontend ↔ backend responsibility separation**, not UI complexity.
 
+Also set up GitHub Actions CI to automatically install dependencies and run frontend build + backend checks on every push/ PR.
+
 ---
 
 ## Tech Stack
