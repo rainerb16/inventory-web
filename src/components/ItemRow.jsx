@@ -12,6 +12,7 @@ export default function ItemRow({
   onDelete,
   isSaving,
   isDeleting,
+  canSave = true,
 }) {
   return (
     <li className="item">
@@ -36,7 +37,8 @@ export default function ItemRow({
             <button
               className="button"
               onClick={() => onSave(item.id)}
-              disabled={isSaving}
+              disabled={isSaving || !canSave}
+
             >
               {isSaving ? "Saving…" : "Save"}
             </button>
@@ -44,7 +46,7 @@ export default function ItemRow({
             <button
               className="button button--secondary"
               onClick={onCancelEdit}
-              disabled={isSaving}
+              disabled={isSaving || !canSave}
             >
               Cancel
             </button>

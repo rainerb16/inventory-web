@@ -10,6 +10,13 @@ $danger: #c0392b;
   box-sizing: border-box;
 }
 
+.app {
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+
 body {
   margin: 0;
   background: $bg;
@@ -30,6 +37,7 @@ body {
   border: 1px solid $border;
   border-radius: 8px;
   padding: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .error {

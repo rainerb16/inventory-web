@@ -7,6 +7,8 @@ export default function ItemForm({
   onSubmit,
   disabled = false,
   buttonText = "Add",
+  adding = false,
+  canAdd = true,
 }) {
   return (
     <form className="form" onSubmit={onSubmit}>
@@ -32,7 +34,7 @@ export default function ItemForm({
         />
       </label>
 
-      <button className="button" type="submit" disabled={disabled}>
+      <button className="button" type="submit" disabled={adding || !canAdd}>
         {buttonText}
       </button>
     </form>

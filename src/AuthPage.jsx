@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "./api";
 
 export default function AuthPage({ onAuthed }) {
   const [email, setEmail] = useState("you@test.com");
   const [password, setPassword] = useState("password123");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   async function login(e) {
     e.preventDefault();
@@ -15,6 +18,7 @@ export default function AuthPage({ onAuthed }) {
         body: JSON.stringify({ email, password }),
       });
       onAuthed(data.user);
+      navigate("/app");
     } catch (e) {
       setError(e.message);
     }
@@ -29,6 +33,7 @@ export default function AuthPage({ onAuthed }) {
         body: JSON.stringify({ email, password }),
       });
       onAuthed(data.user);
+      navigate("/app");
     } catch (e) {
       setError(e.message);
     }

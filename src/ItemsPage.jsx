@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "./api";
 import ItemRow from "./components/ItemRow";
 import ItemForm from "./components/ItemForm";
@@ -16,6 +17,8 @@ export default function ItemsPage({ user, onLogout }) {
   const [savingId, setSavingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   async function loadItems() {
     setError("");
@@ -39,6 +42,7 @@ export default function ItemsPage({ user, onLogout }) {
     try {
       await api("/auth/logout", { method: "POST" });
       onLogout();
+      navigate("/login");
     } catch (e) {
       setError(e.message);
     }
@@ -71,8 +75,6 @@ export default function ItemsPage({ user, onLogout }) {
       setAdding(false);
     }
   }
-
-  const canAdd = String(name).trim().length > 0 && Number(quantity) >= 0;
 
   function startEdit(item) {
     setEditingId(item.id);
@@ -110,15 +112,16 @@ export default function ItemsPage({ user, onLogout }) {
   }
 
   async function deleteItem(id) {
+    if (!confirm("Delete this item?")) return;
+
     setError("");
     setDeletingId(id);
+
     try {
       await api(`/items/${id}`, { method: "DELETE" });
 
-      // Remove from UI without refetch
       setItems((prev) => prev.filter((it) => it.id !== id));
 
-      // If you were editing this item, exit edit mode
       if (editingId === id) cancelEdit();
     } catch (e) {
       setError(e.message);
@@ -127,13 +130,23 @@ export default function ItemsPage({ user, onLogout }) {
     }
   }
 
+  const canAdd =
+    String(name).trim().length > 0 && Number.isInteger(Number(quantity)) && Number(quantity) >= 0;
+
+  const canSave =
+    editingId !== null &&
+    String(editName).trim().length > 0 &&
+    Number.isInteger(Number(editQty)) &&
+    Number(editQty) >= 0;
+
+
   return (
     <>
       <div className="card">
         <p>
           Logged in as <strong>{user.email}</strong>
         </p>
-        <button onClick={logout}>Logout</button>
+        <button className="button" onClick={logout}>Logout</button>
       </div>
 
       {error && <div className="error">{error}</div>}
@@ -174,6 +187,7 @@ export default function ItemsPage({ user, onLogout }) {
                   onDelete={deleteItem}
                   isSaving={savingId === it.id}
                   isDeleting={deletingId === it.id}
+                  canSave={canSave}
                 />
               ))}
           </ul>
