@@ -1,109 +1,68 @@
-# Inventory Dashboard – Frontend
+# Inventory Management Dashboard (Frontend)
 
-A React frontend for an inventory dashboard that uses **session-based authentication** with a Node/Express backend.  
-The app relies on **HttpOnly cookies** and a `/me` endpoint to determine authentication state.
+A React-based interface designed for high-performance inventory tracking. This project serves as a "Merchant-First" dashboard, prioritizing a secure **Session-Based Authentication** flow and a clear separation of concerns between the UI and the API.
 
-This project is intentionally simple and focused on **correct auth flow and frontend ↔ backend responsibility separation**, not UI complexity.
+## Project Philosophy
+This isn't just a UI; it's a demonstration of **Technical Integrity**. I built this to prove that a frontend can be simple, secure, and resilient by deferring all state authority to the backend—ensuring the merchant's data is never compromised.
 
-Also set up GitHub Actions CI to automatically install dependencies and run frontend build + backend checks on every push/ PR.
-
----
-
-## Tech Stack
-- React (Vite)
-- JavaScript (ES6+)
-- Sass (SCSS)
-- Fetch API
-- Session-based auth (via backend)
+## Technical Stack
+- **Framework:** React (Vite for optimized builds)
+- **Styling:** Sass (SCSS) for modular, maintainable UI components
+- **Communication:** Fetch API with centralized error handling
+- **DevOps:** GitHub Actions CI for automated build verification and dependency auditing
 
 ---
 
-## Key Concepts Demonstrated
+## Core Concepts: The "Security-First" Approach
 
-### Session-Based Authentication (Frontend Side)
-- The frontend does **not** store auth state in localStorage or memory.
-- On page load, the app calls `GET /me` to ask the backend who is logged in.
-- Authentication state is derived entirely from backend responses.
+### 1. The `/me` Source of Truth
+Instead of storing sensitive auth data in `localStorage`, this app uses the **`/me` pattern**. On every page load, the frontend asks the backend for the current session. This eliminates "UI flicker" and ensures the user only sees what they are authorized to see.
 
-### Cookie-Based Login
-- Session cookies are sent automatically by the browser.
-- All API requests use `credentials: "include"` so cookies are sent with requests.
-- The frontend never manually reads or writes cookies.
-
-### `/me` Pattern
-- `/me` is the single source of truth for auth state.
-- Used on initial load and refresh to determine whether the user is logged in.
-- Prevents UI flicker and incorrect auth assumptions.
-
-### Protected Data Flow
-- UI only attempts to fetch protected resources (e.g. `/items`) after auth is confirmed.
-- Backend enforces authorization — frontend checks are only for UX.
+### 2. Cookie-Based Data Integrity
+- **Zero-Touch Cookies:** The frontend never reads or writes cookies manually. 
+- **Automated Security:** All requests utilize `credentials: "include"`, allowing the browser to handle **HttpOnly cookies** securely.
+- **Responsibility Separation:** The backend enforces the rules; the frontend provides the best possible experience based on those rules.
 
 ---
 
-## Project Structure
+## System Architecture
 
+### Centralized API Helper (`api.js`)
+I abstracted all network logic into a single helper to ensure:
+- **Consistency:** Global API prefixing and standard JSON parsing.
+- **Resilience:** Centralized error handling for network failures or unauthorized attempts.
+- **Scalability:** Makes switching environments (Dev vs. Production) a single-line change.
+
+### Project Structure
+```text
 src/
-  api.js # Centralized API helper (cookies, errors, JSON)
-  App.jsx # Auth flow + conditional UI
-  main.jsx # App bootstrap
-  - styles/
-      app.scss # Global Sass styles 
-
-
----
-
-## API Helper (`api.js`)
-All network requests go through a single helper function:
-
-- Automatically prefixes API base URL
-- Always sends cookies (`credentials: "include"`)
-- Centralizes JSON parsing and error handling
-
----
-
-## Auth Flow (Frontend Perspective)
-
-1. App loads
-2. `GET /me` is called
-3. If user exists → show authenticated UI
-4. If user is null → show login/signup
-5. Login/signup updates backend session
-6. Frontend updates UI based on backend response
-
-At no point does the frontend “decide” auth state on its own.
-
----
-
-## Styling
-- Sass (SCSS) for styling
-- Simple utility-style class names
-- Focused on clarity and maintainability over visual polish
-
----
-
-## Running Locally
-
-### Prerequisites
-- Backend running at `http://localhost:3000`
-- Node.js installed
-
-### Install & Run
-```bash
-npm install
-npm run dev
+ ├── api.js        # Centralized Fetch logic & Cookie management
+ ├── App.jsx       # Global Auth state & Conditional UI logic
+ ├── main.jsx      # Application entry point
+ └── styles/       # Modular SCSS architecture
 ```
 
-### Frontend runs at:
-`http://localhost:5173`
+## Merchant Workflow (Auth Flow)
+1. Initialization: App polls `GET /me`.
 
-## Todo / Next Steps
+2. Context Awareness: If a session exists, the Merchant Dashboard is rendered.
 
-X DONE – Add items UI (list, create, update, delete)
-X DONE – Persist user session across tabs and refresh
-X DONE – Add loading and empty states for item data
-X DONE - Extract UI into reusable components
-- Improve form validation and user feedback
-- Add basic routing (auth vs dashboard views)
-- Improve accessibility and keyboard navigation
-- Prepare production build and environment configuration
+3. Seamless Login: If no session is found, the user is guided to a clean Login/Signup view.
+
+4. Data Protection: Protected resources (like `/items`) are only fetched after the backend confirms the identity.
+
+## Local Development
+**Prerequisites**
+- Node.js installed.
+- Inventory API running locally at`http://localhost:3000`.
+
+**Setup**
+```bash
+# Install dependencies
+npm install
+
+# Launch the development server
+npm run dev
+```
+*The dashboard will be accessible at `http://localhost:5173`.*
+
