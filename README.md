@@ -3,7 +3,7 @@
 A React-based interface designed for high-performance inventory tracking. This project serves as a "Merchant-First" dashboard, prioritizing a secure **Session-Based Authentication** flow and a clear separation of concerns between the UI and the API.
 
 ## Project Philosophy
-This isn't just a UI; it's a demonstration of **Technical Integrity**. I built this to prove that a frontend can be simple, secure, and resilient by deferring all state authority to the backend—ensuring the merchant's data is never compromised.
+I built this to prove that a frontend can be simple, secure, and resilient by deferring all state authority to the backend—ensuring the merchant's data is never compromised.
 
 ## Technical Stack
 - **Framework:** React (Vite for optimized builds)
@@ -21,7 +21,7 @@ Instead of storing sensitive auth data in `localStorage`, this app uses the **`/
 ### 2. Cookie-Based Data Integrity
 - **Zero-Touch Cookies:** The frontend never reads or writes cookies manually. 
 - **Automated Security:** All requests utilize `credentials: "include"`, allowing the browser to handle **HttpOnly cookies** securely.
-- **Responsibility Separation:** The backend enforces the rules; the frontend provides the best possible experience based on those rules.
+- **Responsibility Separation:** The backend enforces the rules, the frontend provides the best possible experience based on those rules.
 
 ---
 
